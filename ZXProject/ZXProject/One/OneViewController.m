@@ -7,12 +7,14 @@
 //
 
 #import "OneViewController.h"
-#import "TestModel.h"
-
+#import "UIImage+GIF.h"
+#import "LucyOneViewController.h"
 
 @interface OneViewController ()<UITextFieldDelegate>
 
-@property (nonatomic, strong) NSArray *dataArray;
+@property (nonatomic, strong) UIImageView *gifImageView;
+@property (nonatomic, strong) LucyOneViewController *lucyOneVC;
+
 
 @end
 
@@ -21,49 +23,91 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [NetworkHelper dataWithDiscover:YES completion:^(BOOL finish, id  _Nullable responseObject) {
-        if (finish) {
-            TestModel *model = [[TestModel alloc] initWithData:responseObject error:nil];
-            
-            if ([model.code isEqualToString:@"1"]) {
-                self.dataArray = [model.data.projects copy];
-                NSLog(@"%@", self.dataArray);
-            }else{
-                NSString *msg = model.msg;
-                [NetworkHelper showServerMsg:msg];
-                
-            }
-          
-            //完成
-        }else{
-            
-            
-        }
-    }];
-    
-    //在需要使用的界面设置
-    IQKeyboardReturnKeyHandler *retuenKeyHandler = [[IQKeyboardReturnKeyHandler alloc]initWithViewController:self];
-    retuenKeyHandler.lastTextFieldReturnKeyType =UIReturnKeyDone; // 设置最后一个输入框
-    
-    
-    UITextField *textField = [UITextField new];
-    textField.delegate = self;
-    textField.frame = CGRectMake(10, 400, kScreen_Width-20, 30);
-    textField.backgroundColor = [UIColor whiteColor];
-    textField.tag = 1;
-    [self.view addSubview:textField];
-    
-    
-    UITextField *textField1 = [UITextField new];
-    textField1.delegate = self;
-    textField1.frame = CGRectMake(10, 440, kScreen_Width-20, 30);
-    textField1.backgroundColor = [UIColor whiteColor];
-    textField1.tag = 2;
-    [self.view addSubview:textField1];
-    
+    [self initData];
+    [self setView];
     
 }
 
+#pragma mark -- 初始化数据
+-(void)initData{
+    
+    self.lucyOneVC = [[LucyOneViewController alloc]init];
+    [self.lucyOneVC setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
+}
+
+#pragma mark -- 初始化视图
+-(void)setView{
+    
+    //设置logo
+    [self setLogo];
+    //设置设置按钮
+    [self setBtn];
+    //设置gif图
+    [self setGifView];
+}
+
+#pragma mark -- 设置logo
+-(void)setLogo{
+    UIImageView *logoView = [[UIImageView alloc]initWithFrame:CGRectMake(kScreen_Width/2-50, 50, 100, 100)];
+    logoView.image = [UIImage imageNamed:@"meloinfo"];
+    [self.view insertSubview:logoView atIndex:1];
+    
+}
+
+#pragma mark -- 设置gif图
+-(void)setGifView{
+    
+    self.gifImageView = [[UIImageView alloc]initWithFrame:self.view.frame];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"hkdg" ofType:@"gif"];
+    NSData *data = [NSData dataWithContentsOfFile:path];
+    UIImage *image = [UIImage sd_animatedGIFWithData:data];
+    self.gifImageView.image = image;
+    self.gifImageView.alpha = 0;
+    [self.view insertSubview:self.gifImageView atIndex:2];
+    
+}
+
+
+#pragma mark -- 设置设置按钮
+-(void)setBtn{
+    
+    UIButton *luckyBtn = [[UIButton alloc]initWithFrame:CGRectMake(kScreen_Width/2-70, kScreen_Height/2, 140, 140)];
+    [luckyBtn setTitle:@"luckyOne"];
+    [luckyBtn setTitleColor:[UIColor blackColor]];
+    [luckyBtn setBackgroundColor:[UIColor redColor]];
+    [luckyBtn addTarget:self action:@selector(luckyOne)];
+    [self.view insertSubview:luckyBtn atIndex:1];
+    
+}
+
+#pragma mark -- 执行抽奖按钮
+-(void)luckyOne{
+    
+    NSLog(@"抽奖");
+    //简单的动画效果
+    [UIView animateWithDuration:5.0 animations:^{
+        self.gifImageView.alpha=1;
+    } completion:^(BOOL finished) {
+        
+        /***************************/
+        //简单的动画效果
+        [UIView animateWithDuration:5.0 animations:^{
+            
+            //跳转
+            self.gifImageView.alpha = 0;
+            [self presentViewController:self.lucyOneVC animated:YES completion:nil];
+            
+            
+        } completion:^(BOOL finished) {
+            
+            
+        }];
+        
+        /***************************/
+        
+    }];
+    
+}
 
 
 - (void)didReceiveMemoryWarning {

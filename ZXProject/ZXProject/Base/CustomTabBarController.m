@@ -11,7 +11,6 @@
 #import "CustomTabBar.h"
 #import "OneViewController.h"
 #import "TwoViewController.h"
-#import "ThreeViewController.h"
 
 @interface CustomTabBarController ()
 
@@ -37,10 +36,9 @@
 - (void)setUpChildController {
     
     // 添加子控制器
-    [self addChildVc:[[OneViewController alloc] init] title:@"首页" image:@"tabbar_home" selectedImage:@"tabbar_home_selected"];
-    [self addChildVc:[[TwoViewController alloc] init] title:@"消息" image:@"tabbar_message_center" selectedImage:@"tabbar_message_center_selected"];
-    [self addChildVc:[[ThreeViewController alloc] init] title:@"发现" image:@"tabbar_discover" selectedImage:@"tabbar_discover_selected"];
-    
+    [self addChildVc:[[OneViewController alloc] init] title:@"抽奖" image:@"tabbar_home" selectedImage:@"tabbar_home_selected"];
+    [self addChildVc:[[TwoViewController alloc] init] title:@"中奖者" image:@"tabbar_message_center" selectedImage:@"tabbar_message_center_selected"];
+ 
     CustomTabBar *customTabBar = [CustomTabBar new];
     
     [self setValue:customTabBar forKey:@"tabBar"];
