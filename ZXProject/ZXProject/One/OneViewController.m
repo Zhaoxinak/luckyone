@@ -13,7 +13,9 @@
 @interface OneViewController ()<UITextFieldDelegate>
 
 @property (nonatomic, strong) UIImageView *gifImageView;
+@property (nonatomic, strong) UIButton *luckyBtn;
 @property (nonatomic, strong) LucyOneViewController *lucyOneVC;
+
 
 
 @end
@@ -30,7 +32,7 @@
 
 #pragma mark -- 初始化数据
 -(void)initData{
-    
+    //抽奖的控制器
     self.lucyOneVC = [[LucyOneViewController alloc]init];
     [self.lucyOneVC setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
 }
@@ -57,13 +59,13 @@
 #pragma mark -- 设置gif图
 -(void)setGifView{
     
-    self.gifImageView = [[UIImageView alloc]initWithFrame:self.view.frame];
+    _gifImageView = [[UIImageView alloc]initWithFrame:self.view.frame];
     NSString *path = [[NSBundle mainBundle] pathForResource:@"hkdg" ofType:@"gif"];
     NSData *data = [NSData dataWithContentsOfFile:path];
     UIImage *image = [UIImage sd_animatedGIFWithData:data];
-    self.gifImageView.image = image;
-    self.gifImageView.alpha = 0;
-    [self.view insertSubview:self.gifImageView atIndex:2];
+    _gifImageView.image = image;
+    _gifImageView.alpha = 0;
+    [self.view insertSubview:_gifImageView atIndex:2];
     
 }
 
@@ -71,22 +73,23 @@
 #pragma mark -- 设置设置按钮
 -(void)setBtn{
     
-    UIButton *luckyBtn = [[UIButton alloc]initWithFrame:CGRectMake(kScreen_Width/2-70, kScreen_Height/2, 140, 140)];
-    [luckyBtn setTitle:@"luckyOne"];
-    [luckyBtn setTitleColor:[UIColor blackColor]];
-    [luckyBtn setBackgroundColor:[UIColor redColor]];
-    [luckyBtn addTarget:self action:@selector(luckyOne)];
-    [self.view insertSubview:luckyBtn atIndex:1];
+    _luckyBtn = [[UIButton alloc]initWithFrame:CGRectMake(kScreen_Width/2-70, kScreen_Height/2, 140, 140)];
+    [_luckyBtn setTitle:@"luckyOne"];
+    [_luckyBtn setTitleColor:[UIColor blackColor]];
+    [_luckyBtn setBackgroundColor:[UIColor redColor]];
+    [_luckyBtn addTarget:self action:@selector(luckyOne)];
+    [self.view insertSubview:_luckyBtn atIndex:1];
     
 }
 
 #pragma mark -- 执行抽奖按钮
 -(void)luckyOne{
+    _luckyBtn.enabled = NO;
     
     NSLog(@"抽奖");
     //简单的动画效果
     [UIView animateWithDuration:5.0 animations:^{
-        self.gifImageView.alpha=1;
+        _gifImageView.alpha = 1;
     } completion:^(BOOL finished) {
         
         /***************************/
@@ -94,13 +97,13 @@
         [UIView animateWithDuration:5.0 animations:^{
             
             //跳转
-            self.gifImageView.alpha = 0;
+            _gifImageView.alpha = 0;
             [self presentViewController:self.lucyOneVC animated:YES completion:nil];
             
             
         } completion:^(BOOL finished) {
             
-            
+            _luckyBtn.enabled = YES;
         }];
         
         /***************************/
