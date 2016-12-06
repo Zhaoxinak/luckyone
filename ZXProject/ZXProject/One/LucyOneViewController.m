@@ -13,6 +13,7 @@
 
 @interface LucyOneViewController ()<iCarouselDataSource, iCarouselDelegate>
 
+@property (nonatomic, strong) UIButton *startBtn; //滚动栏
 @property (nonatomic, strong) iCarousel *carousel; //滚动栏
 @property (nonatomic, strong) NSMutableArray *staff; //所有员工
 
@@ -46,21 +47,23 @@
     //设置滚动栏
     [self setCarousel];
     
+    //设置开始／停止按钮
+    [self setStartBtn];
+    
     //设置回退按键
     [self dismissVC];
    
 }
 
-
-#pragma mark -- 回退按键
--(void)dismissVC{
-  
-    UIButton *dissBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, kScreen_Height-50, kScreen_Width, 50)];
-    [dissBtn setTitle:@"返回"];
-    [dissBtn setTitleColor:[UIColor whiteColor]];
-    [dissBtn addTarget:self action:@selector(exit)];
-    [self.view insertSubview:dissBtn atIndex:99];
-
+#pragma mark -- 设置开始／停止按钮
+-(void)setStartBtn{
+    
+    _startBtn = [[UIButton alloc]initWithFrame:CGRectMake(kScreen_Width/2-80, 80, 160, 80)];
+    [_startBtn setTitle:@"start"];
+    [_startBtn setTitleColor:[UIColor whiteColor]];
+    [_startBtn addTarget:self action:@selector(startLucky:)];
+    [self.view insertSubview:_startBtn atIndex:99];
+    
 }
 
 #pragma mark -- 滚动栏
@@ -78,7 +81,16 @@
     
 }
 
-
+#pragma mark -- 回退按键
+-(void)dismissVC{
+    
+    UIButton *dissBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, kScreen_Height-50, kScreen_Width, 50)];
+    [dissBtn setTitle:@"返回"];
+    [dissBtn setTitleColor:[UIColor whiteColor]];
+    [dissBtn addTarget:self action:@selector(exit)];
+    [self.view insertSubview:dissBtn atIndex:99];
+    
+}
 
 #pragma mark -- 回退功能
 -(void)exit{
@@ -129,8 +141,22 @@
     return view;
 }
 
-
-
+#pragma mark -- 开始抽奖
+- (void)startLucky:(UIButton *)button{
+    _startBtn.selected = !_startBtn.selected;
+    
+    if (!_startBtn.selected) {
+        [_startBtn setTitle:@"start"];
+        
+        
+    }else{
+        
+        [_startBtn setTitle:@"stop"];
+    }
+    
+    
+    
+}
 
 #pragma mark -- 注销代理
 - (void)dealloc
