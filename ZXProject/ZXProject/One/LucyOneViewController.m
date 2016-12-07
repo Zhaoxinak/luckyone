@@ -16,6 +16,7 @@
 @property (nonatomic, strong) UIButton *startBtn; //滚动栏
 @property (nonatomic, strong) iCarousel *carousel; //滚动栏
 @property (nonatomic, strong) NSMutableArray *staff; //所有员工
+@property (nonatomic, strong) NSTimer *myTimer; //时间计时器
 
 @end
 
@@ -59,6 +60,7 @@
 -(void)setStartBtn{
     
     _startBtn = [[UIButton alloc]initWithFrame:CGRectMake(kScreen_Width/2-80, 80, 160, 80)];
+    _startBtn.selected = NO;
     [_startBtn setTitle:@"start"];
     [_startBtn setTitleColor:[UIColor whiteColor]];
     [_startBtn addTarget:self action:@selector(startLucky:)];
@@ -141,20 +143,47 @@
     return view;
 }
 
-#pragma mark -- 开始抽奖
+#pragma mark -- 抽奖按钮
 - (void)startLucky:(UIButton *)button{
-    _startBtn.selected = !_startBtn.selected;
     
-    if (!_startBtn.selected) {
-        [_startBtn setTitle:@"start"];
-        
-        
-    }else{
-        
-        [_startBtn setTitle:@"stop"];
+    if (button.selected) {
+        [button setTitle:@"start"];
+        [self endFly];
+    }
+    if(!button.selected){
+        [button setTitle:@"stop"];
+        [self startFly];
     }
     
     
+    
+    
+    button.selected = !button.selected;
+    
+    
+    
+    
+}
+
+#pragma mark -- 开始抽奖
+- (void)startFly{
+    
+    
+    _myTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerFired) userInfo:nil repeats:YES];
+}
+
+- (void)timerFired
+{
+  
+    
+}
+
+
+
+#pragma mark -- 结束抽奖
+- (void)endFly{
+    
+    [_myTimer invalidate];
     
 }
 
